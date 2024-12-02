@@ -27,7 +27,7 @@
 
 ## ⛄ 개발 환경
 
-- **Language** : HTML, JavaScript
+- **Language** : JavaScript
 - **IDE** : Visual Studio Code
 - **Image Assets** : 문지현, 박세은 <span style="display: inline-block; vertical-align: middle; line-height: 1.2;"><img src="https://img.shields.io/badge/Instagram-ff69b4?style=plastic&logo=Instagram&logoColor=white"/></a></span>
 
