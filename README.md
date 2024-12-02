@@ -1,3 +1,5 @@
+![전체](https://github.com/user-attachments/assets/903ce622-3f5d-41ba-8178-acf1cd834da7)
+
 # 연말 잠실새내 어라라 Acoustic Live Life 공연
 
 2024년 12월 22일 진행되는 공연에 참여하게 되었습니다.<br>참여자들이 작가가 되어 자기 자신을 표현하고 이 노래가 가지는 의미에 대해서 설명합니다.
