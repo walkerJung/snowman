@@ -29,7 +29,7 @@
 
 - **Language** : HTML, JavaScript
 - **IDE** : Visual Studio Code
-- **Image Assets** : 문지현, 박세은
+- **Image Assets** : 문지현, 박세은 <span><a href="https://www.instagram.com/seysomethiing/"><img src="https://img.shields.io/badge/Instagram-ff69b4?style=plastic&logo=Instagram&logoColor=white"/></a></span>
 
 ## ⛄ 마치며
 
