@@ -6,16 +6,138 @@ canvas.height = window.innerHeight;
 // canvas 생성 END
 
 // 변수 생성 START
-const totalSnowflakes = 150;
 const snowman = { x: canvas.width / 2, y: canvas.height - 150 };
 
-let snowflakes = []; // 눈송이 배열
-let snowmanOpacity = 1; // 눈사람의 투명도 (봄이 오면 점점 사라짐)
-let isSpring = false; // 봄이 되었는지 여부
-let flowerGrowth = 0; // 꽃이 자라는 정도
+let stage = "intro";
+let currentBackgroundStage = "intro";
+let snowflakes = []; // 전역 눈송이 배열
 
-const maxBirds = 3; // 최대 새 개수
+const maxBirds = 4; // 최대 새 개수
 let birds = []; // 새 배열
+
+const stages = [
+  "intro",
+  "verse1",
+  "chorus1",
+  "verse2",
+  "chorus2",
+  "bridge",
+  "chorus3",
+  "outro",
+];
+
+const snowmanImages = {
+  verse1: new Image(),
+  verse2: new Image(),
+  chorus1: new Image(),
+  chorus2: new Image(),
+  bridge: new Image(),
+  chorus3: new Image(),
+  outro: new Image(),
+};
+
+snowmanImages.verse1.src = "assets/snowman/눈사람_미소.png";
+snowmanImages.verse2.src = "assets/snowman/눈사람_시무룩.png";
+snowmanImages.chorus1.src = "assets/snowman/눈사람_미소.png";
+snowmanImages.chorus2.src = "assets/snowman/눈사람_시무룩.png";
+snowmanImages.bridge.src = "assets/snowman/눈사람_그렁그렁.png";
+snowmanImages.chorus3.src = "assets/snowman/눈사람_그렁그렁.png";
+snowmanImages.outro.src = "assets/snowman/눈사람_미소.png";
+
+const littlegirlImages = {
+  verse1: new Image(),
+  verse2: new Image(),
+  chorus1: new Image(),
+  chorus2: new Image(),
+  bridge: new Image(),
+  chorus3: new Image(),
+  outro: new Image(),
+};
+
+littlegirlImages.verse1.src = "assets/littlegirl/소녀_무표정.png";
+littlegirlImages.verse2.src = "assets/littlegirl/소녀_시무룩.png";
+littlegirlImages.chorus1.src = "assets/littlegirl/소녀_웃음.png";
+littlegirlImages.chorus3.src = "assets/littlegirl/소녀_미소.png";
+littlegirlImages.outro.src = "assets/littlegirl/소녀_웃음.png";
+
+const stageLyrics = {
+  intro: "눈사람 - 정정훈",
+  verse1:
+    "멀리 배웅하던 길 여전히 나는 그곳에 서서\n그대가 사랑한 이 계절의 오고 감을 봅니다\n아무 노력 말아요 버거울 때면 언제든 나의 이름을 잊어요",
+  chorus1:
+    "꽃잎이 번지면 당신께도 새로운 봄이 오겠죠\n시간이 걸려도 그대 반드시 행복해지세요",
+  verse2: "그 다음 말은 이젠 내가 해줄 수 없어서\n마음속에만 둘게요",
+  chorus2:
+    "꽃잎이 번지면 그럼에도 새로운 봄이 오겠죠\n한참이 걸려도 그대 반드시 행복해지세요",
+  bridge:
+    "끝 눈이 와요\n혹시 그대 보고 있나요\n슬퍼지도록 시리던\n우리의 그 계절이 가요",
+  chorus3:
+    "마지막으로 날 떠올려 준다면 안 되나요\n다시 한 번 더 같은 마음이고 싶어\n우릴 보내기 전에",
+  outro: "몹시 사랑한 날들\n영원히 나는 이 자리에서",
+};
+
+let currentStageIndex = 0;
+
+function updateStage() {
+  if (currentStageIndex < stages.length) {
+    const currentStage = stages[currentStageIndex];
+
+    // 노래 가사 console
+    const lyrics = stageLyrics[currentStage];
+    console.log(`${lyrics}`);
+
+    // 배경 설정
+    if (currentBackgroundStage !== currentStage) {
+      setStageBackground(currentStage); // 배경 업데이트
+      currentBackgroundStage = currentStage; // 현재 배경 상태 업데이트
+    }
+
+    // 눈송이 개수를 Stage에 따라 변경
+    const stageSnowflakeCounts = {
+      intro: 230,
+      verse1: 180,
+      chorus1: 130,
+      verse2: 40,
+      chorus2: 0,
+      bridge: 330,
+      chorus3: 660,
+      outro: 0,
+    };
+
+    const newSnowflakeCount = stageSnowflakeCounts[currentStage];
+    initializeSnowflakes(newSnowflakeCount); // 눈송이 업데이트
+
+    currentStageIndex++;
+    stage = currentStage;
+
+    if (currentStageIndex < stages.length) {
+      setTimeout(updateStage, 10000); // 10초 후 다음 Stage로
+    } else {
+      setTimeout(() => {
+        console.clear();
+        currentStageIndex = 0; // 처음부터 다시 시작
+        updateStage(); // intro로 돌아감
+      }, 10000);
+    }
+  }
+}
+
+function initializeSnowflakes(count) {
+  if (count > snowflakes.length) {
+    // 눈송이를 추가
+    for (let i = snowflakes.length; i < count; i++) {
+      snowflakes.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        radius: Math.random() * 3 + 1,
+        speed: Math.random() * 1 + 0.5,
+      });
+    }
+  } else if (count < snowflakes.length) {
+    // 눈송이를 제거
+    snowflakes = snowflakes.slice(0, count);
+  }
+}
 
 // 새 이미지 생성
 const birdImage = new Image();
@@ -37,55 +159,44 @@ for (let i = 0; i < maxBirds; i++) {
   birds.push(createBird());
 }
 
-// 눈송이 생성
-for (let i = 0; i < totalSnowflakes; i++) {
-  snowflakes.push({
-    x: Math.random() * canvas.width,
-    y: Math.random() * canvas.height,
-    radius: Math.random() * 3 + 1,
-    speed: Math.random() * 1 + 0.5,
-  });
-}
-
 // 눈사람 그리기
 function drawSnowman() {
-  if (snowmanOpacity <= 0) return; // 눈사람이 완전히 사라졌으면 그리지 않음
+  if (stage == "intro") return;
 
-  ctx.save();
-  ctx.globalAlpha = snowmanOpacity; // 투명도를 적용
+  // stage에 맞는 눈사람 이미지 그리기
+  const face = snowmanImages[stage];
+  if (face) {
+    ctx.drawImage(
+      face,
+      (canvas.width - 200) / 2,
+      canvas.height - 250,
+      200,
+      250
+    );
+  }
+}
 
-  // 몸통 (세 개의 원)
-  ctx.beginPath();
-  ctx.arc(snowman.x, snowman.y, 50, 0, Math.PI * 2); // 몸통 아래
-  ctx.arc(snowman.x, snowman.y - 70, 35, 0, Math.PI * 2); // 몸통 중간
-  ctx.arc(snowman.x, snowman.y - 120, 25, 0, Math.PI * 2); // 머리
-  ctx.fillStyle = "white";
-  ctx.fill();
-  ctx.closePath();
+// 소녀 그리기
+function drawLittleGirl() {
+  if (stage == "intro" || stage == "chorus2" || stage == "bridge") return;
 
-  // 눈사람의 눈
-  ctx.beginPath();
-  ctx.arc(snowman.x - 10, snowman.y - 130, 3, 0, Math.PI * 2); // 왼쪽 눈
-  ctx.arc(snowman.x + 10, snowman.y - 130, 3, 0, Math.PI * 2); // 오른쪽 눈
-  ctx.fillStyle = "black";
-  ctx.fill();
-  ctx.closePath();
-
-  // 눈사람의 코 (당근)
-  ctx.beginPath();
-  ctx.moveTo(snowman.x, snowman.y - 125);
-  ctx.lineTo(snowman.x + 15, snowman.y - 130);
-  ctx.lineTo(snowman.x, snowman.y - 135);
-  ctx.fillStyle = "orange";
-  ctx.fill();
-  ctx.closePath();
-
-  ctx.restore();
+  // stage에 맞는 소녀 이미지 그리기
+  const face = littlegirlImages[stage];
+  const dist = stage == "verse2" ? 320 : 100;
+  if (face) {
+    ctx.drawImage(
+      face,
+      (canvas.width - 200) / 2 - dist,
+      canvas.height - 250,
+      200,
+      250
+    );
+  }
 }
 
 // 새 그리기
 function drawBirds() {
-  if (!isSpring) return; // 봄이 아닐 경우 새를 그리지 않음
+  if (stage !== "outro") return;
 
   birds.forEach((bird, index) => {
     // 새 위치 업데이트
@@ -108,45 +219,6 @@ function drawBirds() {
   });
 }
 
-// 꽃 그리기
-function drawFlower() {
-  if (flowerGrowth <= 0) return; // 꽃이 아직 자라지 않았으면 그리지 않음
-
-  ctx.save();
-  ctx.translate(snowman.x, snowman.y); // 눈사람이 있던 자리에 꽃을 그림
-
-  // 꽃 줄기
-  ctx.beginPath();
-  ctx.moveTo(0, 0);
-  ctx.lineTo(0, -flowerGrowth * 30); // 꽃이 자랄수록 줄기가 길어짐
-  ctx.strokeStyle = "green";
-  ctx.lineWidth = 5;
-  ctx.stroke();
-  ctx.closePath();
-
-  // 꽃잎 (네 개의 원)
-  ctx.fillStyle = "pink";
-  const petalRadius = flowerGrowth * 10; // 꽃이 자랄수록 꽃잎 커짐
-  for (let i = 0; i < 4; i++) {
-    const angle = (Math.PI / 2) * i;
-    const x = Math.cos(angle) * petalRadius;
-    const y = Math.sin(angle) * petalRadius - flowerGrowth * 30;
-    ctx.beginPath();
-    ctx.arc(x, y, petalRadius, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.closePath();
-  }
-
-  // 꽃 중심
-  ctx.beginPath();
-  ctx.arc(0, -flowerGrowth * 30, petalRadius / 2, 0, Math.PI * 2);
-  ctx.fillStyle = "yellow";
-  ctx.fill();
-  ctx.closePath();
-
-  ctx.restore();
-}
-
 // 눈송이 그리기
 function drawSnowflakes() {
   snowflakes.forEach((snowflake) => {
@@ -156,6 +228,12 @@ function drawSnowflakes() {
     ctx.fill();
     ctx.closePath();
   });
+}
+
+// background 설정 함수
+function drawBackground() {
+  setStageBackground(stage);
+  currentBackgroundStage = stage; // 배경 상태 업데이트
 }
 
 // 눈송이 이동
@@ -169,57 +247,64 @@ function moveSnowflakes() {
   });
 }
 
-// 겨울 -> 봄 배경 전환
-function transitionToSpring() {
+// background setting
+function setStageBackground(stage) {
   const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-  if (isSpring) {
-    gradient.addColorStop(0, "lightgreen");
-    gradient.addColorStop(1, "yellow");
-  } else {
-    gradient.addColorStop(0, "darkblue");
+
+  if (stage === "intro") {
+    gradient.addColorStop(0, "#5f77a3");
     gradient.addColorStop(1, "white");
+  } else if (stage === "verse1") {
+    gradient.addColorStop(0, "#87a2d3");
+    gradient.addColorStop(1, "white");
+  } else if (stage === "chorus1") {
+    gradient.addColorStop(0, "#a5bde8");
+    gradient.addColorStop(1, "white");
+  } else if (stage === "verse2") {
+    gradient.addColorStop(0, "#8897b3");
+    gradient.addColorStop(1, "grey");
+  } else if (stage === "chorus2") {
+    gradient.addColorStop(0, "#402abd");
+    gradient.addColorStop(1, "#8897b3");
+  } else if (stage === "bridge") {
+    gradient.addColorStop(0, "#292159");
+    gradient.addColorStop(1, "white");
+  } else if (stage === "chorus3") {
+    gradient.addColorStop(0, "#292159");
+    gradient.addColorStop(1, "white");
+  } else {
+    gradient.addColorStop(0, "#9ace87");
+    gradient.addColorStop(1, "#ccce87");
   }
+
   ctx.fillStyle = gradient;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
+}
+
+// intro 부터 시작
+function startIntro() {
+  stage = "intro";
+  initializeSnowflakes(100);
+  currentStageIndex = 0;
+  updateStage();
 }
 
 // 메인 애니메이션 루프
 function animate() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // 하늘 변화 (봄으로 가는 애니메이션)
-  transitionToSpring();
-
-  if (!isSpring) {
-    drawSnowflakes();
-    moveSnowflakes();
-  }
-
+  drawBackground();
+  drawSnowflakes();
+  moveSnowflakes();
   drawSnowman();
-  drawFlower();
-  drawBirds(); // 여러 마리의 새 그리기
-
-  if (isSpring) {
-    // 눈사람 사라짐
-    if (snowmanOpacity > 0) {
-      snowmanOpacity -= 0.005; // 눈사람이 천천히 사라짐
-    }
-
-    // 꽃 자라기
-    if (flowerGrowth < 1) {
-      flowerGrowth += 0.01; // 꽃이 천천히 자람
-    }
-  }
+  drawLittleGirl();
+  drawBirds();
 
   requestAnimationFrame(animate);
 }
 
-// 봄으로 전환 (몇 초 후 자동으로 봄으로 전환)
-setTimeout(() => {
-  isSpring = true;
-}, 5000); // 5초 후 봄 시작
+startIntro();
 
-// 새 이미지 로드 후 애니메이션 시작
 birdImage.onload = () => {
   animate();
 };
