@@ -141,7 +141,7 @@ function initializeSnowflakes(count) {
 
 // 새 이미지 생성
 const birdImage = new Image();
-birdImage.src = "bird.png"; // 이미지 소스 설정
+birdImage.src = "assets/bird.png"; // 이미지 소스 설정
 
 // 새 생성 함수
 function createBird() {
