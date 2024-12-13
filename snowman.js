@@ -26,6 +26,17 @@ const stages = [
   "outro",
 ];
 
+const stageDurations = {
+  intro: 5000, // 5초
+  verse1: 10000, // 10초
+  chorus1: 15000, // 15초
+  verse2: 8000, // 8초
+  chorus2: 12000, // 12초
+  bridge: 10000, // 10초
+  chorus3: 20000, // 20초
+  outro: 10000, // 10초
+};
+
 const snowmanImages = {
   verse1: new Image(),
   verse2: new Image(),
@@ -110,8 +121,10 @@ function updateStage() {
     currentStageIndex++;
     stage = currentStage;
 
+    const duration = stageDurations[currentStage];
+
     if (currentStageIndex < stages.length) {
-      setTimeout(updateStage, 10000); // 10초 후 다음 Stage로
+      setTimeout(updateStage, duration);
     } else {
       setTimeout(() => {
         console.clear();
