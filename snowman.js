@@ -28,7 +28,7 @@ const stages = [
 
 const stageDurations = {
   intro: 55000,
-  verse1: 63000,
+  verse1: 66000,
   chorus1: 32000,
   verse2: 27000,
   chorus2: 32000,
