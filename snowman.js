@@ -27,14 +27,14 @@ const stages = [
 ];
 
 const stageDurations = {
-  intro: 5000, // 5초
-  verse1: 10000, // 10초
-  chorus1: 15000, // 15초
-  verse2: 8000, // 8초
-  chorus2: 12000, // 12초
-  bridge: 10000, // 10초
-  chorus3: 20000, // 20초
-  outro: 10000, // 10초
+  intro: 55000,
+  verse1: 63000,
+  chorus1: 32000,
+  verse2: 27000,
+  chorus2: 32000,
+  bridge: 410000,
+  chorus3: 370000,
+  outro: 110000,
 };
 
 const snowmanImages = {
