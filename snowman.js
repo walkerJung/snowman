@@ -27,14 +27,14 @@ const stages = [
 ];
 
 const stageDurations = {
-  intro: 55000,
-  verse1: 66000,
-  chorus1: 32000,
-  verse2: 27000,
-  chorus2: 32000,
-  bridge: 410000,
-  chorus3: 370000,
-  outro: 110000,
+  intro: 60000,
+  verse1: 67000,
+  chorus1: 34000,
+  verse2: 28000,
+  chorus2: 33000,
+  bridge: 41000,
+  chorus3: 40000,
+  outro: 11000,
 };
 
 const snowmanImages = {
